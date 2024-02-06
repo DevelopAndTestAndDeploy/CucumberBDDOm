@@ -1,6 +1,8 @@
 package awsomecucumber;
 
 import awsomecucumber.factory.DriverFactory;
+import awsomecucumber.pages.CartPage;
+import awsomecucumber.pages.StorePage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -23,26 +25,18 @@ public class MyStepDefinitions {
     public void i_am_on_the_store_page() {
 
         driver = DriverFactory.getDriver();
-        driver.get("https://askomdch.com/store");
-        System.out.println("adaaff");
-       
+        new StorePage(driver).load("https://askomdch.com/store");
+
     }
     @When("I add {string} to the cart")
-    public void i_add_to_the_cart(String productName) throws InterruptedException {
-        By addToCartBtn = By.cssSelector("a[aria-label='Add “" + productName + "” to your cart']");
-        driver.findElement(addToCartBtn).click();
-        Thread.sleep(3000);
-        By viewCartLink = By.cssSelector("a[title='View cart']");
-        driver.findElement(viewCartLink).click();
+    public void i_add_to_the_cart(String productName)  {
+        new StorePage(driver).addToCart(productName);
     }
     @Then("I should see {int} {string} in the cart")
     public void i_should_see_in_the_cart(int quantity, String productName) {
-        By productNameFld = By.cssSelector("td[class='product-name'] a");
-        String actualProductName = driver.findElement(productNameFld).getText();
-        By productQuantityFld = By.cssSelector("input[type=\"number\"]");
-        String actualQuantity = driver.findElement(productQuantityFld).getAttribute("value");
-        Assert.assertEquals(productName, actualProductName);
-        Assert.assertEquals(quantity, Integer.parseInt(actualQuantity));
+        CartPage cartPage = new CartPage(driver);
+        Assert.assertEquals(productName, cartPage.getProductName());
+        Assert.assertEquals(quantity, cartPage.getProductQuantity());
 
     }
 
@@ -51,17 +45,13 @@ public class MyStepDefinitions {
     public void iMAGuestCustomer() {
 
         driver = DriverFactory.getDriver();
-        driver.get("https://askomdch.com/store");
+        new StorePage(driver).load("https://askomdch.com/store");
     }
 
     @And("I have a product in the cart")
-    public void iHaveAProductInTheCart() throws InterruptedException {
-        driver.get("https://askomdch.com/store");
-        By addToCartBtn = By.cssSelector("a[aria-label='Add “Blue Shoes” to your cart']");
-        driver.findElement(addToCartBtn).click();
-        Thread.sleep(3000);
-        By viewCartLink = By.cssSelector("a[title='View cart']");
-        driver.findElement(viewCartLink).click();
+    public void iHaveAProductInTheCart()  {
+        new StorePage(driver).addToCart("Blue Shoes");
+
     }
 
     @And("I am on the checkout page")
