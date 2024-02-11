@@ -1,9 +1,13 @@
 package awsomecucumber;
 
+import awsomecucumber.constants.EndPoint;
+import awsomecucumber.domainobjects.BillingDetails;
+import awsomecucumber.domainobjects.Product;
 import awsomecucumber.factory.DriverFactory;
 import awsomecucumber.pages.CartPage;
 import awsomecucumber.pages.CheckoutPage;
 import awsomecucumber.pages.StorePage;
+import awsomecucumber.utils.ConfigLoader;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -21,22 +25,30 @@ import java.util.TreeMap;
 public class MyStepDefinitions {
 
     private WebDriver driver;
+   private BillingDetails billingDetails;
 
     @Given("I am on the store page")
     public void i_am_on_the_store_page() {
 
         driver = DriverFactory.getDriver();
-        new StorePage(driver).load("https://askomdch.com/store");
+        new StorePage(driver).load(EndPoint.STORE.url);
 
     }
-    @When("I add {string} to the cart")
-    public void i_add_to_the_cart(String productName)  {
-        new StorePage(driver).addToCart(productName);
+
+    @And("my billing details are")
+    public void myBillingDetailsAre(BillingDetails billingDetails) {
+        this.billingDetails = billingDetails;
     }
-    @Then("I should see {int} {string} in the cart")
-    public void i_should_see_in_the_cart(int quantity, String productName) {
+
+    @When("I add {product} to the cart")
+    public void i_add_to_the_cart(Product product)  {
+
+        new StorePage(driver).addToCart(product.getName()   );
+    }
+    @Then("I should see {int} {product} in the cart")
+    public void i_should_see_in_the_cart(int quantity, Product product) {
         CartPage cartPage = new CartPage(driver);
-        Assert.assertEquals(productName, cartPage.getProductName());
+        Assert.assertEquals(product.getName(), cartPage.getProductName());
         Assert.assertEquals(quantity, cartPage.getProductQuantity());
 
     }
@@ -46,7 +58,7 @@ public class MyStepDefinitions {
     public void iMAGuestCustomer() {
 
         driver = DriverFactory.getDriver();
-        new StorePage(driver).load("https://askomdch.com/store");
+        new StorePage(driver).load(EndPoint.STORE.url);
     }
 
     @And("I have a product in the cart")
@@ -61,15 +73,9 @@ public class MyStepDefinitions {
     }
 
     @When("I provide billing details")
-    public void iProvideBillingDetails(List<Map<String , String>> billingDetails) {
+    public void iProvideBillingDetails()  {
        CheckoutPage checkoutPage = new CheckoutPage(driver);
-       checkoutPage.setBillingDetails(billingDetails.get(0).get("firstname"),
-               billingDetails.get(0).get("lastname"),
-               billingDetails.get(0).get("address_line1"),
-               billingDetails.get(0).get("city"),
-               billingDetails.get(0).get("state"),
-               billingDetails.get(0).get("zip"),
-               billingDetails.get(0).get("email"));
+       checkoutPage.setBillingDetails(billingDetails);
     }
 
     @And("I place an order")
@@ -85,4 +91,6 @@ public class MyStepDefinitions {
                 new CheckoutPage(driver).getNoticeText());
 
     }
+
+
 }
