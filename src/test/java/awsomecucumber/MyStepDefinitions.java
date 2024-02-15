@@ -1,6 +1,7 @@
 package awsomecucumber;
 
 import awsomecucumber.constants.EndPoint;
+import awsomecucumber.context.TestContext;
 import awsomecucumber.domainobjects.BillingDetails;
 import awsomecucumber.domainobjects.Product;
 import awsomecucumber.factory.DriverFactory;
@@ -24,13 +25,17 @@ import java.util.TreeMap;
 
 public class MyStepDefinitions {
 
-    private WebDriver driver;
-   private BillingDetails billingDetails;
+    private final WebDriver driver;
+    private BillingDetails billingDetails;
+
+
+    public MyStepDefinitions(TestContext context){
+        driver = context.driver;
+    }
 
     @Given("I am on the store page")
     public void i_am_on_the_store_page() {
 
-        driver = DriverFactory.getDriver();
         new StorePage(driver).load(EndPoint.STORE.url);
 
     }
@@ -57,7 +62,6 @@ public class MyStepDefinitions {
     @Given("I'm a guest customer")
     public void iMAGuestCustomer() {
 
-        driver = DriverFactory.getDriver();
         new StorePage(driver).load(EndPoint.STORE.url);
     }
 

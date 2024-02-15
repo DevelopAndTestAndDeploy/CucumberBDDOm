@@ -6,7 +6,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class DriverFactory {
 
-    private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
 
     public static WebDriver initializeDriver(String browser){
         WebDriver driver;
@@ -22,13 +21,10 @@ public class DriverFactory {
 
         }
         driver.manage().window().maximize();
-        DriverFactory.driver.set(driver);
         return driver;
     }
 
-    public static WebDriver getDriver(){
-        return driver.get();
-    }
+
 
 
 
