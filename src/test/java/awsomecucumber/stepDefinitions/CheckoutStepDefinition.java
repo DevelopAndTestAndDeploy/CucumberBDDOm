@@ -1,5 +1,6 @@
 package awsomecucumber.stepDefinitions;
 
+import awsomecucumber.constants.EndPoint;
 import awsomecucumber.context.TestContext;
 import awsomecucumber.domainobjects.BillingDetails;
 import awsomecucumber.pages.CartPage;
@@ -41,6 +42,12 @@ public class CheckoutStepDefinition{
         Assert.assertEquals("Thank you. Your order has been received.",
                 checkoutPage.getNoticeText());
 
+    }
+
+    @And("I am on the checkout page")
+    public void iAmOnTheCheckoutPage() {
+
+        checkoutPage.load(EndPoint.CHECKOUT.url);
     }
 
 

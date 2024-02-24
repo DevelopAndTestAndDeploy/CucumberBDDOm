@@ -6,6 +6,7 @@ import io.cucumber.testng.CucumberOptions;
 import org.testng.annotations.DataProvider;
 
 @CucumberOptions(
+        plugin = {"html:target/cucumber/cucumber.html"},
         glue = {"awsomecucumber"},
         features = {"src/test/resources/awsomecucumber"}
 )

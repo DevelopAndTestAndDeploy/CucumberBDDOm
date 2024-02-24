@@ -18,11 +18,7 @@ public class CartStepDefinition {
     }
 
 
-    @And("I am on the checkout page")
-    public void iAmOnTheCheckoutPage() {
 
-        cartPage.checkout();
-    }
 
     @Then("I should see {int} {product} in the cart")
     public void i_should_see_in_the_cart(int quantity, Product product) {

@@ -1,5 +1,6 @@
 package awsomecucumber.apis;
 
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.Cookies;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
@@ -13,8 +14,8 @@ public class ApiRequest extends SpecBuilder{
 
     public static Response post(String endPoint, Headers headers,
                                 HashMap<String, Object> formParams, Cookies cookies){
-        return given(getRequestSpec()).
-                header(headers).
+        return given(getRequestSpec()).relaxedHTTPSValidation().
+                headers(headers).
                 formParams(formParams).
                 cookies(cookies).
                 when().
